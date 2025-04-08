@@ -1,0 +1,221 @@
+/*-----------------------------------------------------------------------------------
+
+	Theme Name: Theme Name - Kremer
+	Theme URI: https://boulangerie-kremer.lu/
+	Description: This theme developed by Onup Roy :)
+	Author: Onup Roy
+	Author URI: https://onuproy.com
+	License: GNU General Public License version 3.0
+	License URI: http://www.gnu.org/licenses/gpl-3.0.html
+	Version: 1.0
+	Text Domain: kremer
+-------------------------------------------------------------------------------------*/
+
+/*Woocommerce Default CSS*/
+
+#customer_details{
+
+}
+.woocommerce {
+  max-width: 1140px;
+  width: 100%;
+  margin: auto;
+}
+#customer_details .col-1 {
+  flex: 0 0 48%;
+  max-width: 48%;
+}
+
+#customer_details .col-2 {
+  flex: 0 0 48%;
+  max-width: 48%;
+}
+
+.woocommerce-billing-fields__field-wrapper p {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+}
+.woocommerce form .form-row input.input-text, .woocommerce form .form-row textarea,
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e8e8e8;
+  font-size: 18px;
+  font-weight: 400;
+  box-shadow: 0 0 10px #e8e8e8;
+}
+
+.woocommerce form .form-row label,.woocommerce-billing-fields h3,.woocommerce-additional-fields h3 {
+  line-height: 2;
+  font-size: 17px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.select2-container .select2-selection--single{
+  height:43px;
+   box-shadow: 0 0 10px #e8e8e8;
+   border-bottom: none;
+}
+.woocommerce form .form-row .select2-container{
+  height: 45px;
+}
+
+.checkout_coupon.woocommerce-form-coupon button,#place_order{
+  background: #F656A5 !important;
+  color: #FFF !important;
+}
+.woocommerce-input-wrapper {
+  display: block;
+  width: 100%;
+}
+.checkout_coupon.woocommerce-form-coupon > p,
+.woocommerce-privacy-policy-text > p {
+  font-size: 16px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#order_review_heading {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.woocommerce-privacy-policy-text {
+  margin-bottom: 20px;
+}
+
+#payment {
+  margin-bottom: 100px;
+}
+
+/*Account Page*/
+
+.woocommerce-MyAccount-navigation {
+  float: left;
+  width: 25%;
+  margin-bottom: 100px;
+}
+.woocommerce-MyAccount-content {
+  width: 75%;
+  overflow: hidden;
+  padding-left: 50px;
+  box-sizing: border-box;
+  margin-bottom: 100px;
+}
+
+.woocommerce-MyAccount-navigation ul {
+}
+.woocommerce-MyAccount-navigation ul {
+}
+.woocommerce-MyAccount-navigation ul li a {
+  display: block;
+  padding: 7px;
+  border-bottom: 1px solid #000;
+  color: #000;
+}
+.woocommerce-MyAccount-navigation ul li:last-child a{
+  border-bottom: none;
+}
+.woocommerce-MyAccount-navigation ul li.is-active a{
+  color:#E31484;
+}
+
+.u-column1.col-1.woocommerce-Address {
+  width: 100%;
+  max-width: 100%;
+}
+
+.u-column2.col-2.woocommerce-Address {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 30px;
+}
+
+.password-input {
+  width: 100%;
+  display: block !important;
+}
+
+.woocommerce-Button.button {
+  background: #F21381 !important;
+  color: #FFF !important;
+}
+
+.woocommerce-MyAccount-content p {
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.terms-content p {
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 20px;
+  line-height: 26px;
+}
+.terms-content h3 {
+  font-size: 22px;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+
+.faq-content h2 {
+  border-bottom: none;
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  color: #FFF;
+}
+
+.card-header {
+  padding: .75rem 1.25rem;
+  margin-bottom: 0;
+  background: linear-gradient(to right, #B61A8E,#CB178A, #E11485, #F9127F);
+  border-bottom: 1px solid #FFF;
+  cursor: pointer;
+}
+
+
+/*Login page */
+
+.woocommerce-form.woocommerce-form-login.login {
+  max-width: 400px;
+  margin: auto;
+  margin-bottom: 100px;
+  margin-top: 20px;
+}
+
+
+.woocommerce-form.woocommerce-form-login.login  .password-input {
+  display: block !important;
+  width: 100%;
+}
+.woocommerce-form.woocommerce-form-login.login .form-row {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.woocommerce-button.button.woocommerce-form-login__submit {
+  background: #F21390 !important;
+  color: #FFF !important;
+  margin-top: 10px;
+}
+
+.main-page-content-area  .woocommerce > h2 {
+  text-align: center;
+  font-size: 25px;
+  font-family: 'Montserrat', sans-serif;
+}
+.woocommerce-ResetPassword.lost_reset_password p{ 
+  font-size: 18px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.woocommerce-ResetPassword.lost_reset_password {
+  margin: 80px 0;
+}
