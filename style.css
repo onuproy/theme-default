@@ -1,15 +1,17 @@
 /*-----------------------------------------------------------------------------------
 
-	Theme Name: Theme Name - Kremer
-	Theme URI: https://boulangerie-kremer.lu/
-	Description: This theme developed by Onup Roy :)
-	Author: Onup Roy
-	Author URI: https://onuproy.com
-	License: GNU General Public License version 3.0
-	License URI: http://www.gnu.org/licenses/gpl-3.0.html
-	Version: 1.0
-	Text Domain: kremer
+  Theme Name: Theme Name - Kremer
+  Theme URI: https://boulangerie-kremer.lu/
+  Description: This theme developed by Onup Roy :)
+  Author: Onup Roy
+  Author URI: https://onuproy.com
+  License: GNU General Public License version 3.0
+  License URI: http://www.gnu.org/licenses/gpl-3.0.html
+  Version: 1.0
+  Text Domain: kremer
 -------------------------------------------------------------------------------------*/
+
+/*Woocommerce Default CSS*/
 
 /*Woocommerce Default CSS*/
 
@@ -17,7 +19,7 @@
 
 }
 .woocommerce {
-  max-width: 1140px;
+  max-width: 100%;
   width: 100%;
   margin: auto;
 }
@@ -36,37 +38,42 @@
   display: block;
   overflow: hidden;
 }
-.woocommerce form .form-row input.input-text, .woocommerce form .form-row textarea,
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-
-  width: 100%;
-  box-sizing: border-box;
-  padding: 12px 20px;
-  margin-bottom: 20px;
-  border: 1px solid #e8e8e8;
-  font-size: 18px;
-  font-weight: 400;
-  box-shadow: 0 0 10px #e8e8e8;
+.woocommerce form .form-row input.input-text, .woocommerce form .form-row textarea, .select2-container--default .select2-selection--single .select2-selection__rendered {
+    box-sizing: border-box;
+    box-shadow: 0 0 10px #e8e8e8;
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #626262;
+    margin-bottom: 15px;
+    background: #FAFAFA;
+    opacity: 0.55;
+    font: normal normal normal 15px / 20px Gill Sans;
+    letter-spacing: 0px;
+    color: #000000 !important;
 }
 
 .woocommerce form .form-row label,.woocommerce-billing-fields h3,.woocommerce-additional-fields h3 {
   line-height: 2;
   font-size: 17px;
-  font-family: 'Montserrat', sans-serif;
 }
 
-.select2-container .select2-selection--single{
-  height:43px;
-   box-shadow: 0 0 10px #e8e8e8;
-   border-bottom: none;
+.select2-container .select2-selection--single {
+    height: 43px;
+    box-shadow: 0 0 10px #e8e8e8;
+    border-bottom: none;
+    border: none;
+    background: #FAFAFA;
 }
 .woocommerce form .form-row .select2-container{
   height: 45px;
 }
 
-.checkout_coupon.woocommerce-form-coupon button,#place_order{
-  background: #F656A5 !important;
-  color: #FFF !important;
+.checkout_coupon.woocommerce-form-coupon button, #place_order {
+    background: #000 !important;
+    color: #FFF !important;
+    padding: 13px 18px!important;
+    font-size: 15px;
+    font-family: 'Futura' !important;
 }
 .woocommerce-input-wrapper {
   display: block;
@@ -112,18 +119,18 @@
 .woocommerce-MyAccount-navigation ul {
 }
 .woocommerce-MyAccount-navigation ul li a {
-  display: block;
-  padding: 7px;
-  border-bottom: 1px solid #000;
-  color: #000;
+    display: block;
+    padding: 9px;
+    border-bottom: 1px solid #000;
+    color: #838383;
 }
 .woocommerce-MyAccount-navigation ul li:last-child a{
   border-bottom: none;
 }
-.woocommerce-MyAccount-navigation ul li.is-active a{
-  color:#E31484;
+.woocommerce-MyAccount-navigation ul li.is-active a {
+    color: #000000;
+    background: #DDD;
 }
-
 .u-column1.col-1.woocommerce-Address {
   width: 100%;
   max-width: 100%;
@@ -141,8 +148,11 @@
 }
 
 .woocommerce-Button.button {
-  background: #F21381 !important;
-  color: #FFF !important;
+    background: #000000 !important;
+    color: #FFF !important;
+}
+nav.woocommerce-MyAccount-navigation {
+    border: 1px solid #000;
 }
 
 .woocommerce-MyAccount-content p {
@@ -196,16 +206,31 @@
   width: 100%;
 }
 .woocommerce-form.woocommerce-form-login.login .form-row {
-  flex-direction: column;
-  align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .woocommerce-button.button.woocommerce-form-login__submit {
-  background: #F21390 !important;
-  color: #FFF !important;
-  margin-top: 10px;
+    background: #000000 !important;
+    color: #FFF !important;
+    padding: 15px 44px;
+    font: normal normal normal 14px / 18px Franklin Gothic Demi;
+    letter-spacing: 2.1px;
+    text-transform: uppercase;
+    opacity: 1;
+    border-radius: 33px;
+    border: transparent;
+    width: 328px;
+    text-align: center;
+    margin: auto;
 }
 
+.woocommerce .woocommerce-form-login .woocommerce-form-login__submit {
+    float: initial;
+    margin-right: 1em;
+}
 .main-page-content-area  .woocommerce > h2 {
   text-align: center;
   font-size: 25px;
@@ -218,4 +243,300 @@
 
 .woocommerce-ResetPassword.lost_reset_password {
   margin: 80px 0;
+}
+
+/*.woocommerce-notices-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 210px;
+    width: max-content;
+    margin: auto;
+}*/
+
+
+section.my_account_____f_area {
+    background: #F4F4F4 0% 0% no-repeat padding-box;
+    padding-top: 280px;
+    padding-bottom: 150px;
+}
+
+.woocommerce-message {
+    border-top-color: green;
+    color: green;
+}
+
+.woocommerce-message::before {
+    content: "\e015";
+    color: green;
+}
+
+.woocommerce-error, .woocommerce-info, .woocommerce-message {
+    list-style: none !important;
+    outline: none !important;
+}
+
+
+.wc-block-cart .wc-block-cart__submit-container {
+  padding: 0;
+  background: #000;
+  color: #FFF !important;
+}
+
+a.checkout-button.button.alt.wc-forward {
+    background: #000;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#add_payment_method table.cart td.actions .coupon .input-text, .woocommerce-cart table.cart td.actions .coupon .input-text, .woocommerce-checkout table.cart td.actions .coupon .input-text {
+  float: left;
+  box-sizing: border-box;
+  border: 1px solid #cfc8d8;
+  padding: 6px 12px 5px;
+  margin: 0 4px 0 0;
+  outline: 0;
+  width: 150px;
+  font-size: 15px;
+}
+
+.checkout_content_k {
+    max-width: 850px;
+    margin: auto;
+    width: 100%;
+}
+
+.B2B_Shop a {
+    display: inline-block;
+    background: #000;
+    color: #FFF;
+    padding: 8px 15px;
+    margin-top: 18px;
+    border-radius: 7px;
+}
+
+.cart_totals h2 {
+    padding-bottom: 11px;
+}
+
+td.product-thumbnail {
+    text-align: center;
+}
+#add_payment_method table.cart img, .woocommerce-cart table.cart img, .woocommerce-checkout table.cart img {
+    width: 58px;
+    box-shadow: none;
+    text-align: center;
+}
+.woocommerce .woocommerce-customer-details .woocommerce-column__title {
+    margin-bottom: 15px;
+    margin-top: 2px;
+}
+p.woocommerce-notice.woocommerce-notice--success.woocommerce-thankyou-order-received {
+    padding-bottom: 15px;
+}
+h2.woocommerce-order-details__title {
+    padding: 15px 0px;
+}
+
+
+.woocommerce-Price-amount.amount {
+  font-size: 17px;
+  font-family: 'Gilroy';
+  letter-spacing: 0.8px;
+  color: #000000;
+}
+
+.button.wc-forward {
+  background: #000 !important;
+  color: #FFF !important;
+}
+
+.woocommerce-Address-title.title .edit {
+  display: inline-block;
+  background: #000;
+  color: #FFF;
+  padding: 7px 15px;
+  margin-top: 18px;
+  border-radius: 7px;
+  font-size: 15px;
+}
+
+.woocommerce-cart-form .actions .coupon .button {
+  background: #000 !important;
+  color: #FFF !important;
+}
+
+.woocommerce-cart-form .actions .button {
+  background: #000 !important;
+  color: #FFF !important;
+}
+
+tr.woocommerce-orders-table__row.woocommerce-orders-table__row--status-completed.order {
+    background: darkseagreen;
+}
+p.order-again a {
+    background: #000 !important;
+    color: #FFF !important;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Futura';
+}
+li.woocommerce-MyAccount-navigation-link.woocommerce-MyAccount-navigation-link--customer-logout a {
+    color: red;
+}
+
+#log_out_class{
+  color: red;
+}
+
+.xoo-wsc-ft-btn.xoo-wsc-btn.xoo-wsc-ft-btn-checkout .woocommerce-Price-amount.amount {
+  color: #FFF;
+  font-family: 'Gilroy';
+  font-style: normal !important;
+}
+
+p.stock.out-of-stock {
+    color: red;
+}
+
+
+
+.woocommerce form .form-row .input-text, .woocommerce form .form-row select {
+
+    background-color: #f7f7f7;
+}
+
+select{
+  outline: none !important;
+}
+
+.product_image {
+  height: 200px;
+  overflow: hidden;
+}
+.p_image {
+  text-align: center;
+}
+.woocommerce ul.products li.product a {
+  display: inline-block;
+}
+.xoo-wsc-ft-btn.xoo-wsc-btn.xoo-wsc-ft-btn-checkout:hover .woocommerce-Price-amount.amount {
+  color: #000 !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@media all and (max-width: 991px) {
+
+  .woocommerce-page.columns-3 ul.products li.product, .woocommerce.columns-3 ul.products li.product {
+    width: 48.2%;
+    margin-bottom: 20px;
+  }
+
+
+}
+
+
+
+
+@media all and (max-width: 768px) {
+
+  .woocommerce-MyAccount-content {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .woocommerce-MyAccount-navigation {
+    margin-bottom: 40px;
+  }
+
+  section.my_account_____f_area {
+    padding-top: 214px;
+    padding-bottom: 80px;
+  }
+
+  .product_image {
+    height: 145px;
+    overflow: hidden;
+  }
+  .product_content h2 {
+    line-height: 1;
+  }
+  .product_content {
+    padding-bottom: 4px;
+  }
+.product_description {
+  padding-top: 18px;
+} 
+
+.addd_to_cart input {
+  padding: 8px 4px !important;
+  width: 80px;
+}
+
+.single_add_to_cart_button.button.alt {
+  padding: 7px 5px !important;
+  width: 135px;
+}
+
+
+
+
+
+
+}
+
+
+@media all and (max-width: 574px) {
+
+  .woocommerce-page.columns-3 ul.products li.product, .woocommerce.columns-3 ul.products li.product {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .product_image {
+     height: 245px;
+    overflow: hidden;
+  } 
+  .shop_product____f_area {
+    max-width: 360px;
+    margin: auto;
+    width: 100%;
+  }
+
+
+
+
+
+
+}
+
+/* Fix position of Allowed Users note */
+.woocommerce_options_panel .form-field.show-if-restricted select + .description {
+    display: block;
+    margin-top: 8px;
+    margin-left: 0;
+    color: #555;
+    font-style: italic;
+}
+
+
+strong.product-quantity {
+    font-family: 'Arial' !important;
+}
+
+.wpcf7 form.sent .wpcf7-response-output {
+  border-color: #46b450;
+  color: green;
+  width: max-content;
+  font-size: 14px;
 }
