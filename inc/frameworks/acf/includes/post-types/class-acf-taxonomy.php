@@ -60,12 +60,8 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 		 * Constructs the class.
 		 */
 		public function __construct() {
-			$this->register_post_type();
-
 			// Include admin classes in admin.
 			if ( is_admin() ) {
-				acf_include( 'includes/admin/admin-internal-post-type-list.php' );
-				acf_include( 'includes/admin/admin-internal-post-type.php' );
 				acf_include( 'includes/admin/post-types/admin-taxonomy.php' );
 				acf_include( 'includes/admin/post-types/admin-taxonomies.php' );
 			}
@@ -73,48 +69,6 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 			parent::__construct();
 
 			add_action( 'acf/init', array( $this, 'register_taxonomies' ), 6 );
-		}
-
-		/**
-		 * Registers the acf-taxonomy custom post type with WordPress.
-		 *
-		 * @since 6.1
-		 */
-		public function register_post_type() {
-			$cap = acf_get_setting( 'capability' );
-
-			register_post_type(
-				'acf-taxonomy',
-				array(
-					'labels'          => array(
-						'name'               => __( 'Taxonomies', 'acf' ),
-						'singular_name'      => __( 'Taxonomies', 'acf' ),
-						'add_new'            => __( 'Add New', 'acf' ),
-						'add_new_item'       => __( 'Add New Taxonomy', 'acf' ),
-						'edit_item'          => __( 'Edit Taxonomy', 'acf' ),
-						'new_item'           => __( 'New Taxonomy', 'acf' ),
-						'view_item'          => __( 'View Taxonomy', 'acf' ),
-						'search_items'       => __( 'Search Taxonomies', 'acf' ),
-						'not_found'          => __( 'No Taxonomies found', 'acf' ),
-						'not_found_in_trash' => __( 'No Taxonomies found in Trash', 'acf' ),
-					),
-					'public'          => false,
-					'hierarchical'    => true,
-					'show_ui'         => true,
-					'show_in_menu'    => false,
-					'_builtin'        => false,
-					'capability_type' => 'post',
-					'capabilities'    => array(
-						'edit_post'    => $cap,
-						'delete_post'  => $cap,
-						'edit_posts'   => $cap,
-						'delete_posts' => $cap,
-					),
-					'supports'        => false,
-					'rewrite'         => false,
-					'query_var'       => false,
-				)
-			);
 		}
 
 		/**
@@ -189,12 +143,6 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 					'item_link_description'      => '',
 				),
 				'description'            => '',
-				'capabilities'           => array(
-					'manage_terms' => 'manage_categories',
-					'edit_terms'   => 'manage_categories',
-					'delete_terms' => 'manage_categories',
-					'assign_terms' => 'edit_posts',
-				),
 				'public'                 => true,
 				'publicly_queryable'     => true,
 				'hierarchical'           => false,
@@ -230,30 +178,65 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 		}
 
 		/**
+		 * Register the CPT required for ACF taxonomies.
+		 */
+		public function register_post_type() {
+			$cap = acf_get_setting( 'capability' );
+			register_post_type(
+				$this->post_type,
+				array(
+					'labels'          => array(
+						'name'               => __( 'Taxonomies', 'acf' ),
+						'singular_name'      => __( 'Taxonomies', 'acf' ),
+						'add_new'            => __( 'Add New', 'acf' ),
+						'add_new_item'       => __( 'Add New Taxonomy', 'acf' ),
+						'edit_item'          => __( 'Edit Taxonomy', 'acf' ),
+						'new_item'           => __( 'New Taxonomy', 'acf' ),
+						'view_item'          => __( 'View Taxonomy', 'acf' ),
+						'search_items'       => __( 'Search Taxonomies', 'acf' ),
+						'not_found'          => __( 'No Taxonomies found', 'acf' ),
+						'not_found_in_trash' => __( 'No Taxonomies found in Trash', 'acf' ),
+					),
+					'public'          => false,
+					'hierarchical'    => true,
+					'show_ui'         => true,
+					'show_in_menu'    => false,
+					'_builtin'        => false,
+					'capability_type' => 'post',
+					'capabilities'    => array(
+						'edit_post'    => $cap,
+						'delete_post'  => $cap,
+						'edit_posts'   => $cap,
+						'delete_posts' => $cap,
+					),
+					'supports'        => false,
+					'rewrite'         => false,
+					'query_var'       => false,
+				)
+			);
+		}
+
+		/**
 		 * Validates post type values before allowing save from the global $_POST object.
 		 * Errors are added to the form using acf_add_internal_post_type_validation_error().
 		 *
 		 * @since 6.1
 		 *
-		 * @return boolean validity status
+		 * @return bool validity status
 		 */
 		public function ajax_validate_values() {
-			if ( empty( $_POST['acf_taxonomy'] ) || empty( $_POST['acf_taxonomy']['taxonomy'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
-				return false;
-			}
-
-			$taxonomy_key = acf_sanitize_request_args( wp_unslash( $_POST['acf_taxonomy']['taxonomy'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+			$taxonomy_key = acf_sanitize_request_args( $_POST['acf_taxonomy']['taxonomy'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
 			$taxonomy_key = is_string( $taxonomy_key ) ? $taxonomy_key : '';
 			$valid        = true;
 
-			if ( strlen( $taxonomy_key ) > 32 ) {
+			if ( strlen( $taxonomy_key ) > 20 ) {
 				$valid = false;
-				acf_add_internal_post_type_validation_error( 'taxonomy', __( 'The taxonomy key must be under 32 characters.', 'acf' ) );
+				acf_add_internal_post_type_validation_error( 'taxonomy', __( 'The taxonomy key must be under 20 characters.', 'acf' ) );
 			}
 
 			if ( preg_match( '/^[a-z0-9_-]*$/', $taxonomy_key ) !== 1 ) {
 				$valid = false;
-				acf_add_internal_post_type_validation_error( 'taxonomy', __( 'The taxonomy key must only contain lower case alphanumeric characters, underscores or dashes.', 'acf' ) );
+				acf_add_internal_post_type_validation_error( 'taxonomy', __( 'The taxonomy key must only contain lowercase alphanumeric characters, underscores or dashes.', 'acf' ) );
 			}
 
 			if ( in_array( $taxonomy_key, acf_get_wp_reserved_terms(), true ) ) {
@@ -263,18 +246,17 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 				acf_add_internal_post_type_validation_error( 'taxonomy', $message );
 			} else {
 				// Check if this post key exists in the ACF store for registered post types, excluding those which failed registration.
-				$store   = acf_get_store( $this->store );
-				$post_id = (int) acf_maybe_get_POST( 'post_id', 0 );
-
+				$store      = acf_get_store( $this->store );
+				$post_id    = (int) acf_sanitize_request_args( $_POST['post_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
 				$matches    = array_filter(
 					$store->get_data(),
-					function ( $item ) use ( $taxonomy_key ) {
+					function( $item ) use ( $taxonomy_key ) {
 						return $item['taxonomy'] === $taxonomy_key && empty( $item['not_registered'] );
 					}
 				);
 				$duplicates = array_filter(
 					$matches,
-					function ( $item ) use ( $post_id ) {
+					function( $item ) use ( $post_id ) {
 						return $item['ID'] !== $post_id;
 					}
 				);
@@ -282,10 +264,12 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 				if ( $duplicates ) {
 					$valid = false;
 					acf_add_internal_post_type_validation_error( 'taxonomy', __( 'This taxonomy key is already in use by another taxonomy in ACF and cannot be used.', 'acf' ) );
+				} else {
 					// If we're not already in use with another ACF taxonomy, check if we're registered, but not by ACF.
-				} elseif ( empty( $matches ) && taxonomy_exists( $taxonomy_key ) ) {
-					$valid = false;
-					acf_add_internal_post_type_validation_error( 'taxonomy', __( 'This taxonomy key is already in use by another taxonomy registered outside of ACF and cannot be used.', 'acf' ) );
+					if ( empty( $matches ) && taxonomy_exists( $taxonomy_key ) ) {
+						$valid = false;
+						acf_add_internal_post_type_validation_error( 'taxonomy', __( 'This taxonomy key is already in use by another taxonomy registered outside of ACF and cannot be used.', 'acf' ) );
+					}
 				}
 			}
 
@@ -303,19 +287,16 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param  array   $post          The main ACF taxonomy settings array.
-		 * @param  boolean $escape_labels Determines if the label values should be escaped.
+		 * @param array $post The main ACF taxonomy settings array.
 		 * @return array
 		 */
-		public function get_taxonomy_args( $post, $escape_labels = true ) {
+		public function get_taxonomy_args( $post ) {
 			$args = array();
 
-			// Make sure any provided labels are escaped strings and not empty.
+			// Make sure any provided labels are strings and not empty.
 			$labels = array_filter( $post['labels'] );
 			$labels = array_map( 'strval', $labels );
-			if ( $escape_labels ) {
-				$labels = array_map( 'esc_html', $labels );
-			}
+
 			if ( ! empty( $labels ) ) {
 				$args['labels'] = $labels;
 			}
@@ -397,33 +378,11 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 				$args['show_admin_column'] = true;
 			}
 
-			$capabilities = array();
-
-			if ( ! empty( $post['capabilities']['manage_terms'] ) && 'manage_categories' !== $post['capabilities']['manage_terms'] ) {
-				$capabilities['manage_terms'] = (string) $post['capabilities']['manage_terms'];
-			}
-
-			if ( ! empty( $post['capabilities']['edit_terms'] ) && 'manage_categories' !== $post['capabilities']['edit_terms'] ) {
-				$capabilities['edit_terms'] = (string) $post['capabilities']['edit_terms'];
-			}
-
-			if ( ! empty( $post['capabilities']['delete_terms'] ) && 'manage_categories' !== $post['capabilities']['delete_terms'] ) {
-				$capabilities['delete_terms'] = (string) $post['capabilities']['delete_terms'];
-			}
-
-			if ( ! empty( $post['capabilities']['assign_terms'] ) && 'edit_posts' !== $post['capabilities']['assign_terms'] ) {
-				$capabilities['assign_terms'] = (string) $post['capabilities']['assign_terms'];
-			}
-
-			if ( ! empty( $capabilities ) ) {
-				$args['capabilities'] = $capabilities;
-			}
-
 			// WordPress defaults to the tags/categories metabox, but a custom callback or `false` is also supported.
 			$meta_box = isset( $post['meta_box'] ) ? (string) $post['meta_box'] : 'default';
 
 			if ( 'custom' === $meta_box && ! empty( $post['meta_box_cb'] ) ) {
-				$args['meta_box_cb'] = array( $this, 'build_safe_context_for_metabox_cb' );
+				$args['meta_box_cb'] = (string) $post['meta_box_cb'];
 
 				if ( ! empty( $post['meta_box_sanitize_cb'] ) ) {
 					$args['meta_box_sanitize_cb'] = (string) $post['meta_box_sanitize_cb'];
@@ -505,60 +464,6 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 		}
 
 		/**
-		 * Ensure the metabox being called does not perform any unsafe operations.
-		 *
-		 * @since 6.3.8
-		 *
-		 * @param WP_Post $post The post being rendered.
-		 * @param array   $tax  The provided taxonomy information required for callback render.
-		 * @return mixed The callback result.
-		 */
-		public function build_safe_context_for_metabox_cb( $post, $tax ) {
-			$taxonomies = $this->get_posts();
-			$this_tax   = array_filter(
-				$taxonomies,
-				function ( $taxonomy ) use ( $tax ) {
-					return $taxonomy['taxonomy'] === $tax['args']['taxonomy'];
-				}
-			);
-			if ( empty( $this_tax ) || ! is_array( $this_tax ) ) {
-				// Unable to find the ACF taxonomy. Don't do anything.
-				return;
-			}
-			$acf_taxonomy = array_shift( $this_tax );
-			$original_cb  = isset( $acf_taxonomy['meta_box_cb'] ) ? $acf_taxonomy['meta_box_cb'] : false;
-
-			// Prevent access to any wp_ prefixed functions in a callback.
-			if ( apply_filters( 'acf/taxonomy/prevent_access_to_wp_functions_in_meta_box_cb', true ) && substr( strtolower( $original_cb ), 0, 3 ) === 'wp_' ) {
-				// Don't execute register meta box callbacks if an internal wp function by default.
-				return;
-			}
-
-			$unset     = array( '_POST', '_GET', '_REQUEST', '_COOKIE', '_SESSION', '_FILES', '_ENV', '_SERVER' );
-			$originals = array();
-
-			foreach ( $unset as $var ) {
-				if ( isset( $GLOBALS[ $var ] ) ) {
-					$originals[ $var ] = $GLOBALS[ $var ];
-					$GLOBALS[ $var ]   = array(); //phpcs:ignore -- used for building a safe context
-				}
-			}
-
-			$return = false;
-			if ( is_callable( $original_cb ) ) {
-				$return = call_user_func( $original_cb, $post, $tax );
-			}
-
-			foreach ( $unset as $var ) {
-				if ( isset( $originals[ $var ] ) ) {
-					$GLOBALS[ $var ] = $originals[ $var ]; //phpcs:ignore -- used for restoring the original context
-				}
-			}
-
-			return $return;
-		}
-
-		/**
 		 * Returns a string that can be used to create a taxonomy in PHP.
 		 *
 		 * @since 6.1
@@ -575,15 +480,9 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 			$post         = $this->validate_post( $post );
 			$taxonomy_key = $post['taxonomy'];
 			$objects      = (array) $post['object_type'];
-			$objects      = var_export( $objects, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for PHP export.
-			$args         = $this->get_taxonomy_args( $post, false );
-
-			// Restore original metabox callback.
-			if ( ! empty( $args['meta_box_cb'] ) && ! empty( $post['meta_box_cb'] ) ) {
-				$args['meta_box_cb'] = $post['meta_box_cb'];
-			}
-
-			$args = var_export( $args, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for PHP export.
+			$objects      = var_export( $objects, true );
+			$args         = $this->get_taxonomy_args( $post );
+			$args         = var_export( $args, true );
 
 			if ( ! $args ) {
 				return $return;
@@ -592,7 +491,7 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 			$args    = $this->format_code_for_export( $args );
 			$objects = $this->format_code_for_export( $objects );
 
-			$return .= "register_taxonomy( '{$taxonomy_key}', {$objects}, {$args} );\r\n";
+			$return .= "register_taxonomy('{$taxonomy_key}', $objects, {$args} );\r\n\r\n";
 
 			return esc_textarea( $return );
 		}
@@ -658,37 +557,6 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 			}
 
 			return $post;
-		}
-
-		/**
-		 * Prepares an ACF taxonomy for import.
-		 *
-		 * @since 6.3.10
-		 *
-		 * @param array $post The ACF post array.
-		 * @return array
-		 */
-		public function prepare_post_for_import( $post ) {
-			if ( ! acf_get_setting( 'enable_meta_box_cb_edit' ) && ( ! empty( $post['meta_box_cb'] ) || ! empty( $post['meta_box_sanitize_cb'] ) ) ) {
-				$post['meta_box_cb']          = '';
-				$post['meta_box_sanitize_cb'] = '';
-
-				if ( ! empty( $post['meta_box'] ) && 'custom' === $post['meta_box'] ) {
-					$post['meta_box'] = 'default';
-				}
-
-				if ( ! empty( $post['ID'] ) ) {
-					$existing_post = $this->get_post( $post['ID'] );
-
-					if ( is_array( $existing_post ) ) {
-						$post['meta_box']             = ! empty( $existing_post['meta_box'] ) ? (string) $existing_post['meta_box'] : '';
-						$post['meta_box_cb']          = ! empty( $existing_post['meta_box_cb'] ) ? (string) $existing_post['meta_box_cb'] : '';
-						$post['meta_box_sanitize_cb'] = ! empty( $existing_post['meta_box_sanitize_cb'] ) ? (string) $existing_post['meta_box_sanitize_cb'] : '';
-					}
-				}
-			}
-
-			return parent::prepare_post_for_import( $post );
 		}
 
 		/**
@@ -838,6 +706,7 @@ if ( ! class_exists( 'ACF_Taxonomy' ) ) {
 
 			return $this->import_post( $acf_args );
 		}
+
 	}
 
 }

@@ -36,19 +36,11 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		public $store = 'post-types';
 
 		/**
-		 * Constructor.
+		 * Constructor for the post types list admin page.
 		 *
-		 * @since 6.2
-		 */
-		public function __construct() {
-			add_action( 'admin_menu', array( $this, 'admin_menu' ), 8 );
-			parent::__construct();
-		}
-
-		/**
-		 * Current screen actions for the post types list admin page.
+		 * @since   6.1
 		 *
-		 * @since 6.1
+		 * @return  void
 		 */
 		public function current_screen() {
 			// Bail early if not post types admin page.
@@ -98,11 +90,9 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		 */
 		public function admin_table_columns( $_columns ) {
 			// Set the "no found" label to be our custom HTML for no results.
-			if ( empty( acf_request_arg( 's' ) ) ) {
-				global $wp_post_types;
-				$this->not_found_label                                = $wp_post_types[ $this->post_type ]->labels->not_found;
-				$wp_post_types[ $this->post_type ]->labels->not_found = $this->get_not_found_html();
-			}
+			global $wp_post_types;
+			$this->not_found_label                                = $wp_post_types[ $this->post_type ]->labels->not_found;
+			$wp_post_types[ $this->post_type ]->labels->not_found = $this->get_not_found_html();
 
 			$columns = array(
 				'cb'               => $_columns['cb'],
@@ -140,11 +130,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 
 				// Description.
 				case 'acf-description':
-					if ( ( is_string( $post['description'] ) || is_numeric( $post['description'] ) ) && ! empty( $post['description'] ) ) {
+					if ( $post['description'] ) {
 						echo '<span class="acf-description">' . acf_esc_html( $post['description'] ) . '</span>';
-					} else {
-						echo '<span class="acf-emdash" aria-hidden="true">—</span>';
-						echo '<span class="screen-reader-text">' . esc_html__( 'No description', 'acf' ) . '</span>';
 					}
 					break;
 
@@ -179,8 +166,6 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 			$field_groups = acf_get_field_groups( array( 'post_type' => $post_type['post_type'] ) );
 
 			if ( empty( $field_groups ) ) {
-				echo '<span class="acf-emdash" aria-hidden="true">—</span>';
-				echo '<span class="screen-reader-text">' . esc_html__( 'No field groups', 'acf' ) . '</span>';
 				return;
 			}
 
@@ -191,7 +176,7 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 			$text          = implode( ', ', $shown_labels );
 
 			if ( ! empty( $hidden_labels ) ) {
-				$text .= ', <span class="acf-more-items acf-js-tooltip" title="' . implode( ', ', $hidden_labels ) . '">+' . count( $hidden_labels ) . '</span>';
+				$text .= ', <span class="acf-more-items acf-tooltip-js" title="' . implode( ', ', $hidden_labels ) . '">+' . count( $hidden_labels ) . '</span>';
 			}
 
 			echo acf_esc_html( $text );
@@ -233,19 +218,13 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 				$labels[] = $taxonomy->label;
 			}
 
-			if ( empty( $labels ) ) {
-				echo '<span class="acf-emdash" aria-hidden="true">—</span>';
-				echo '<span class="screen-reader-text">' . esc_html__( 'No taxonomies', 'acf' ) . '</span>';
-				return;
-			}
-
 			$limit         = 3;
 			$shown_labels  = array_slice( $labels, 0, $limit );
 			$hidden_labels = array_slice( $labels, $limit );
 			$text          = implode( ', ', $shown_labels );
 
 			if ( ! empty( $hidden_labels ) ) {
-				$text .= ', <span class="acf-more-items acf-js-tooltip" title="' . implode( ', ', $hidden_labels ) . '">+' . count( $hidden_labels ) . '</span>';
+				$text .= ', <span class="acf-more-items acf-tooltip-js" title="' . implode( ', ', $hidden_labels ) . '">+' . count( $hidden_labels ) . '</span>';
 			}
 
 			echo acf_esc_html( $text );
@@ -260,12 +239,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		 * @return void
 		 */
 		public function render_admin_table_column_num_posts( $post_type ) {
-			$no_posts  = '<span class="acf-emdash" aria-hidden="true">—</span>';
-			$no_posts .= '<span class="screen-reader-text">' . esc_html__( 'No posts', 'acf' ) . '</span>';
-
 			// WP doesn't count posts for post types that don't exist.
-			if ( empty( $post_type['active'] ) || 'trash' === get_post_status( $post_type['ID'] ) ) {
-				echo acf_esc_html( $no_posts );
+			if ( 'trash' === get_post_status( $post_type['ID'] ) ) {
 				return;
 			}
 
@@ -274,16 +249,11 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 				$num_posts = $num_posts->publish;
 			}
 
-			if ( ! $num_posts || ! is_numeric( $num_posts ) ) {
-				echo acf_esc_html( $no_posts );
+			if ( ! is_numeric( $num_posts ) ) {
 				return;
 			}
 
-			printf(
-				'<a href="%s">%s</a>',
-				esc_url( admin_url( 'edit.php?post_type=' . $post_type['post_type'] ) ),
-				esc_html( number_format_i18n( $num_posts ) )
-			);
+			echo esc_html( number_format_i18n( $num_posts ) );
 		}
 
 		/**
@@ -291,8 +261,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 		 *
 		 * @since 6.1
 		 *
-		 * @param string  $action The action being performed.
-		 * @param integer $count  The number of items the action was performed on.
+		 * @param string $action The action being performed.
+		 * @param int    $count  The number of items the action was performed on.
 		 * @return string
 		 */
 		public function get_action_notice_text( $action, $count = 1 ) {
@@ -323,8 +293,8 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 					break;
 				case 'acfsynccomplete':
 					$text = sprintf(
-						/* translators: %s number of post types synchronized */
-						_n( 'Post type synchronized.', '%s post types synchronized.', $count, 'acf' ),
+						/* translators: %s number of post types synchronised */
+						_n( 'Post type synchronised.', '%s post types synchronised.', $count, 'acf' ),
 						$count
 					);
 					break;
@@ -345,8 +315,10 @@ if ( ! class_exists( 'ACF_Admin_Post_Types' ) ) :
 			__( 'This post type could not be registered because its key is in use by another post type registered by another plugin or theme.', 'acf' ) .
 			'"></span> ' . _x( 'Registration Failed', 'post status', 'acf' );
 		}
+
 	}
 
 	// Instantiate.
 	acf_new_instance( 'ACF_Admin_Post_Types' );
+
 endif; // Class exists check.

@@ -62,8 +62,6 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		public function __construct() {
 			// Include admin classes in admin.
 			if ( is_admin() ) {
-				acf_include( 'includes/admin/admin-internal-post-type-list.php' );
-				acf_include( 'includes/admin/admin-internal-post-type.php' );
 				acf_include( 'includes/admin/post-types/admin-field-group.php' );
 				acf_include( 'includes/admin/post-types/admin-field-groups.php' );
 			}
@@ -97,12 +95,55 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		}
 
 		/**
+		 * Register the field-group custom post type with WordPress
+		 *
+		 * @since 6.1
+		 */
+		public function register_post_type() {
+			$cap = acf_get_setting( 'capability' );
+
+			// Register the Field Group post type.
+			register_post_type(
+				'acf-field-group',
+				array(
+					'labels'          => array(
+						'name'               => __( 'Field Groups', 'acf' ),
+						'singular_name'      => __( 'Field Group', 'acf' ),
+						'add_new'            => __( 'Add New', 'acf' ),
+						'add_new_item'       => __( 'Add New Field Group', 'acf' ),
+						'edit_item'          => __( 'Edit Field Group', 'acf' ),
+						'new_item'           => __( 'New Field Group', 'acf' ),
+						'view_item'          => __( 'View Field Group', 'acf' ),
+						'search_items'       => __( 'Search Field Groups', 'acf' ),
+						'not_found'          => __( 'No Field Groups found', 'acf' ),
+						'not_found_in_trash' => __( 'No Field Groups found in Trash', 'acf' ),
+					),
+					'public'          => false,
+					'hierarchical'    => true,
+					'show_ui'         => true,
+					'show_in_menu'    => false,
+					'_builtin'        => false,
+					'capability_type' => 'post',
+					'capabilities'    => array(
+						'edit_post'    => $cap,
+						'delete_post'  => $cap,
+						'edit_posts'   => $cap,
+						'delete_posts' => $cap,
+					),
+					'supports'        => false,
+					'rewrite'         => false,
+					'query_var'       => false,
+				)
+			);
+		}
+
+		/**
 		 * Get an ACF CPT object as an array.
 		 *
 		 * @since 6.1
 		 *
-		 * @param integer|WP_Post $id The post ID being queried.
-		 * @return array|boolean The main ACF array for the post, or false on failure.
+		 * @param int|WP_Post $id The post ID being queried.
+		 * @return array|bool The main ACF array for the post, or false on failure.
 		 */
 		public function get_post( $id = 0 ) {
 			// Allow WP_Post to be passed.
@@ -194,8 +235,8 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param integer|string $id The ID of the field group to delete.
-		 * @return boolean
+		 * @param int|string $id The ID of the field group to delete.
+		 * @return bool
 		 */
 		public function delete_post( $id = 0 ) {
 			// Disable filters to ensure ACF loads data from DB.
@@ -239,8 +280,8 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param integer|string $id The ID of the field group to trash.
-		 * @return boolean
+		 * @param int|string $id The ID of the field group to trash.
+		 * @return bool
 		 */
 		public function trash_post( $id = 0 ) {
 			// Disable filters to ensure ACF loads data from DB.
@@ -280,8 +321,8 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param integer|string $id The ID of the ACF post to untrash.
-		 * @return boolean
+		 * @param int|string $id The ID of the ACF post to untrash.
+		 * @return bool
 		 */
 		public function untrash_post( $id = 0 ) {
 			// Disable filters to ensure ACF loads data from DB.
@@ -320,8 +361,8 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 		 *
 		 * @since 6.1
 		 *
-		 * @param integer|string $id          The ID of the post to duplicate.
-		 * @param integer        $new_post_id Optional post ID to override.
+		 * @param int|string $id          The ID of the post to duplicate.
+		 * @param int        $new_post_id Optional post ID to override.
 		 * @return array The new ACF post array.
 		 */
 		public function duplicate_post( $id = 0, $new_post_id = 0 ) {
@@ -436,13 +477,16 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 				return $return;
 			}
 
-			$code = var_export( $post, true ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions -- Used for PHP export.
+			$code = var_export( $post, true );
 			if ( ! $code ) {
 				return $return;
 			}
 
-			$code    = $this->format_code_for_export( $code );
-			$return .= "acf_add_local_field_group( {$code} );\r\n";
+			$code = $this->format_code_for_export( $code );
+
+			$return .= "if ( function_exists('acf_add_local_field_group') ):\r\n\r\n";
+			$return .= "acf_add_local_field_group({$code});\r\n\r\n";
+			$return .= "endif;\r\n\r\n";
 
 			return esc_textarea( $return );
 		}
@@ -539,6 +583,7 @@ if ( ! class_exists( 'ACF_Field_Group' ) ) {
 
 			return $post;
 		}
+
 	}
 
 }
